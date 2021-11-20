@@ -619,7 +619,13 @@ class instance extends instance_skel {
 				break
 			case 'goto':
 				cmd = new Commands.GoToCommand()
-				cmd.timecode = opt.tc
+				tc = opt.tc
+
+				self.system.emit('variable_parse', opt.tc, function (value) {
+					tc = value
+				})
+
+				cmd.timecode = tc
 				break
 			case 'gotoN':
 				cmd = new Commands.GoToCommand()
