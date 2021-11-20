@@ -329,7 +329,7 @@ class instance extends instance_skel {
 				label: 'Goto (TC)',
 				options: [
 					{
-						type: 'textinput',
+						type: 'textwithvariables',
 						label: 'Timecode hh:mm:ss:ff',
 						id: 'tc',
 						default: '00:00:01:00',
