@@ -621,7 +621,7 @@ class instance extends instance_skel {
 				cmd = new Commands.GoToCommand()
 				var tc = opt.tc
 
-				self.system.emit('variable_parse', opt.tc, function (value) {
+				this.system.emit('variable_parse', opt.tc, function (value) {
 					tc = value
 				})
 
