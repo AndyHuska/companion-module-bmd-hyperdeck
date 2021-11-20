@@ -619,7 +619,7 @@ class instance extends instance_skel {
 				break
 			case 'goto':
 				cmd = new Commands.GoToCommand()
-				tc = opt.tc
+				var tc = opt.tc
 
 				self.system.emit('variable_parse', opt.tc, function (value) {
 					tc = value
