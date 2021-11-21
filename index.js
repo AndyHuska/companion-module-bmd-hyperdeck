@@ -6,6 +6,8 @@ const {
 	updateSlotInfoVariables,
 	updateTimecodeVariables,
 	updateClipVariables,
+	updateOutPointVariable,
+	updateInPointVariable,
 } = require('./variables')
 const { initFeedbacks } = require('./feedbacks')
 const { upgradeCombineOldPlayActions, upgradeTimecodeNotifications } = require('./upgrades')
@@ -1234,9 +1236,7 @@ class instance extends instance_skel {
 	 */
 	 async setInPoint() {
 		try {
-			
-			this.setVariable('InPointHMSF', this.timecodeVariables['TimecodeHMSF'])
-			
+			updateInPointVariable(this)
 		} catch (e) {
 			if (e.code) {
 				this.log('error', e.code + ' ' + e.name)
@@ -1250,10 +1250,8 @@ class instance extends instance_skel {
 	 * @access protected
 	 */
 	async setOutPoint() {
-		try {
-			
-			this.setVariable('OutPointHMSF', this.timecodeVariables['TimecodeHMSF'])
-			
+		try {			
+			updateOutPointVariable(this)			
 		} catch (e) {
 			if (e.code) {
 				this.log('error', e.code + ' ' + e.name)

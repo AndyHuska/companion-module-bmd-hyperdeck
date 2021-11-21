@@ -157,6 +157,14 @@ module.exports.updateTimecodeVariables = function (instance) {
 	setTcVariable(false, countUp), setTcVariable(true, countDown)
 }
 
+module.exports.updateInPointVariable = function (instance) {
+	instance.setVariable('InPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+}
+
+module.exports.updateOutPointVariable = function (instance) {
+	instance.setVariable('OutPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+}
+
 module.exports.initVariables = function (instance) {
 	var variables = []
 
@@ -243,13 +251,17 @@ module.exports.initVariables = function (instance) {
 		label: 'InPointHMSF',
 		name: 'InPointHMSF',
 	})
-	instance.setVariable('InPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+	
 
 	variables.push({
 		label: 'OutPointHMSF',
 		name: 'OutPointHMSF',
 	})
-	instance.setVariable('OutPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+
+	module.exports.updateInPointVariable(instance)
+
+	module.exports.updateOutPointVariable(instance)
+	
 
 	module.exports.updateTimecodeVariables(instance)
 
