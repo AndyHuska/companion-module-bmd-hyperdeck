@@ -719,7 +719,7 @@ class instance extends instance_skel {
 				this.updateClips(this.transportInfo.slotId)
 				break
 			case 'setInPoint':
-				this.updateClips(this.transportInfo.slotId)
+				this.setInPoint()
 				break
 		}
 
