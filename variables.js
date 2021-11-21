@@ -158,11 +158,23 @@ module.exports.updateTimecodeVariables = function (instance) {
 }
 
 module.exports.updateInPointVariable = function (instance) {
-	instance.setVariable('InPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+	try	{
+		instance.setVariable('InPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+	}
+	catch(e)
+	{
+
+	}
 }
 
 module.exports.updateOutPointVariable = function (instance) {
-	instance.setVariable('OutPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+	try {
+		instance.setVariable('OutPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+	}
+	catch(e)
+	{
+
+	}
 }
 
 module.exports.initVariables = function (instance) {
