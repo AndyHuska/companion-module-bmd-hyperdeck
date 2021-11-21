@@ -1221,9 +1221,8 @@ class instance extends instance_skel {
 	}
 
 	/**
-	 * INTERNAL: Get clip list from the hyperdeck
+	 * INTERNAL: Set InPoint
 	 *
-	 * @param {number} currentSlot hyperdeck slot id
 	 * @access protected
 	 */
 	 async setInPoint() {

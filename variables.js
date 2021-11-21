@@ -234,20 +234,22 @@ module.exports.initVariables = function (instance) {
 			label: (isCountdown ? 'Countdown ' : '') + 'Timecode (FF)',
 			name: (isCountdown ? 'countdownT' : 't') + 'imecodeF',
 		})
-
-		variables.push({
-			label: 'InPointHMSF',
-			name: 'InPointHMSF',
-		})
-
-		variables.push({
-			label: 'OutPointHMSF',
-			name: 'OutPointHMSF',
-		})
 	}
 
 	initTcVariable(false)
 	initTcVariable(true)
+
+	variables.push({
+		label: 'InPointHMSF',
+		name: 'InPointHMSF',
+	})
+	instance.setVariable('InPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+
+	variables.push({
+		label: 'OutPointHMSF',
+		name: 'OutPointHMSF',
+	})
+	instance.setVariable('OutPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
 
 	module.exports.updateTimecodeVariables(instance)
 
