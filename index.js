@@ -565,6 +565,10 @@ class instance extends instance_skel {
 			],
 		}
 
+		actions['setInPoint'] = {
+			label: 'Set In Point',
+		}
+
 		this.setActions(actions)
 	}
 
@@ -712,6 +716,9 @@ class instance extends instance_skel {
 				cmd.enable = opt.remoteEnable
 				break
 			case 'fetchClips':
+				this.updateClips(this.transportInfo.slotId)
+				break
+			case 'setInPoint':
 				this.updateClips(this.transportInfo.slotId)
 				break
 		}
@@ -1206,6 +1213,24 @@ class instance extends instance_skel {
 				this.actions() // reinit actions to update list
 			}
 			updateClipVariables(this)
+		} catch (e) {
+			if (e.code) {
+				this.log('error', e.code + ' ' + e.name)
+			}
+		}
+	}
+
+	/**
+	 * INTERNAL: Get clip list from the hyperdeck
+	 *
+	 * @param {number} currentSlot hyperdeck slot id
+	 * @access protected
+	 */
+	 async setInPoint() {
+		try {
+			
+			instance.setVariable('InPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+			
 		} catch (e) {
 			if (e.code) {
 				this.log('error', e.code + ' ' + e.name)
