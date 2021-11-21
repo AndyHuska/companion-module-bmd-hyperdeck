@@ -625,7 +625,16 @@ class instance extends instance_skel {
 					tc = value
 				})
 
-				cmd.timecode = tc
+				if (tc && tc.includes(':')) {
+					let matches
+					if ((matches = REGEX_TIMECODE.exec(tc)) !== null) {
+						if (matches[1] !== undefined) {
+							tc = matches[1]
+						}
+					}
+				}
+
+				//cmd.timecode = tc
 				break
 			case 'gotoN':
 				cmd = new Commands.GoToCommand()
