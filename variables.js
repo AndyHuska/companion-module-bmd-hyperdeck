@@ -114,6 +114,8 @@ module.exports.updateTimecodeVariables = function (instance) {
 				countUp.tcHMS = tc.toString().substr(0, 8)
 				countUp.tcHMSF = tc.toString()
 
+				instance.tcCache = tc
+
 				if (
 					instance.transportInfo['slotId'] !== undefined &&
 					instance.clipsList[instance.transportInfo['slotId']] !== undefined
@@ -133,10 +135,25 @@ module.exports.updateTimecodeVariables = function (instance) {
 						countDown.tcF = tcLeft.frames
 						countDown.tcHMS = tcLeft.toString().substr(0, 8)
 						countDown.tcHMSF = tcLeft.toString()
+
+
+						//now for the in-out stuff
+						try	{
+							const tcIn = Timecode(instance.tcInPoint, tb)
+							const tcOut = Timecode(instance.tcOutPoint, tb)
+							const tcInOutDuration = Math.max(0, tcOut.frameCount - tcIn.frameCount - 1) 
+							const tcRemainingToOut = Math.max(0, tcOut.frameCount - tc.frameCount - 1) 
+		
+							instance.inOutDuration = tcInOutDuration.toString()
+							instance.outTimeRemaining = tcRemainingToOut.toString()
+						}
+						catch(e) {
+
+						}
 					}
 				}
 			} catch (err) {
-				this.log('error', 'Timecode error:' + JSON.stringify(err))
+				this._log('error', 'Timecode error:' + JSON.stringify(err))
 			}
 		} else {
 			// no timebase implies we can't use smpte-timecode lib
@@ -155,11 +172,20 @@ module.exports.updateTimecodeVariables = function (instance) {
 	}
 
 	setTcVariable(false, countUp), setTcVariable(true, countDown)
+
+	try {
+		instance.setVariable('InOutDuration', instance.inOutDuration)
+		instance.setVariable('OutTimeRemaining', instance.outTimeRemaining)
+	}
+	catch(e) {
+		console.log(broken)
+	}
 }
 
 module.exports.updateInPointVariable = function (instance) {
 	try	{
-		instance.setVariable('InPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+		instance.setVariable('InPointHMSF', instance.tcCache.toString())
+		instance.tcInPoint = instance.tcCache.toString()
 	}
 	catch(e)
 	{
@@ -169,7 +195,8 @@ module.exports.updateInPointVariable = function (instance) {
 
 module.exports.updateOutPointVariable = function (instance) {
 	try {
-		instance.setVariable('OutPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+		instance.setVariable('OutPointHMSF', instance.tcCache.toString())
+		instance.tcOutPoint = instance.tcCache.toString()
 	}
 	catch(e)
 	{
@@ -262,15 +289,22 @@ module.exports.initVariables = function (instance) {
 	variables.push({
 		label: 'InPointHMSF',
 		name: 'InPointHMSF',
-	})
-	
+	})	
 
 	variables.push({
 		label: 'OutPointHMSF',
 		name: 'OutPointHMSF',
-	})
+	})	
 
-	instance.setVariableDefinitions(variables)
+	variables.push({
+		label: 'InOutDuration',
+		name: 'InOutDuration',
+	})	
+
+	variables.push({
+		label: 'OutTimeRemaining',
+		name: 'OutTimeRemaining',
+	})
 	
 
 	module.exports.updateTimecodeVariables(instance)
@@ -279,5 +313,7 @@ module.exports.initVariables = function (instance) {
 
 	module.exports.updateOutPointVariable(instance)
 
+
+	instance.setVariableDefinitions(variables)
 	
 }

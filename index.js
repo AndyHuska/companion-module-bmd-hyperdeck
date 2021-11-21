@@ -41,6 +41,11 @@ class instance extends instance_skel {
 		this.slotInfo = []
 		this.clipCount = 0
 		this.clipsList = []
+		this.tcCache = '00:00:00:00'
+		this.tcInPoint = '00:00:00:00'
+		this.tcOutPoint = '00:00:00:00'
+		this.inOutDuration = '00:00:00:00'
+		this.outTimeRemaining = '00:00:00:00'
 		this.transportInfo = {
 			status: '',
 			speed: '',
@@ -575,6 +580,14 @@ class instance extends instance_skel {
 			label: 'Set Out Point',
 		}
 
+		actions['goInPoint'] = {
+			label: 'Go to In Point',
+		}
+
+		actions['goOutPoint'] = {
+			label: 'Go to Out Point',
+		}
+
 		this.setActions(actions)
 	}
 
@@ -644,7 +657,7 @@ class instance extends instance_skel {
 					}
 				}
 
-				//cmd.timecode = tc
+				cmd.timecode = tc
 				break
 			case 'gotoN':
 				cmd = new Commands.GoToCommand()
@@ -729,6 +742,14 @@ class instance extends instance_skel {
 				break
 			case 'setOutPoint':
 				this.setOutPoint()
+				break
+			case 'goInPoint':
+				cmd = new Commands.GoToCommand()
+				cmd.timecode = this.tcInPoint.toString()
+				break
+			case 'setOutPoint':
+				cmd = new Commands.GoToCommand()
+				cmd.timecode = this.tcOutPoint.toString()
 				break
 		}
 
