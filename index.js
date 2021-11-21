@@ -569,6 +569,10 @@ class instance extends instance_skel {
 			label: 'Set In Point',
 		}
 
+		actions['setOutPoint'] = {
+			label: 'Set Out Point',
+		}
+
 		this.setActions(actions)
 	}
 
