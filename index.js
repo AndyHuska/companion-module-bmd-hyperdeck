@@ -627,7 +627,7 @@ class instance extends instance_skel {
 
 				if (tc && tc.includes(':')) {
 					let matches
-					if ((matches = REGEX_TIMECODE.exec(tc)) !== null) {
+					if ((matches = this.REGEX_TIMECODE.exec(tc)) !== null) {
 						if (matches[1] !== undefined) {
 							tc = matches[1]
 						}
