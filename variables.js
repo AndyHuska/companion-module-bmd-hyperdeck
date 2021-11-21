@@ -270,12 +270,14 @@ module.exports.initVariables = function (instance) {
 		name: 'OutPointHMSF',
 	})
 
-	module.exports.updateInPointVariable(instance)
-
-	module.exports.updateOutPointVariable(instance)
+	instance.setVariableDefinitions(variables)
 	
 
 	module.exports.updateTimecodeVariables(instance)
 
-	instance.setVariableDefinitions(variables)
+	module.exports.updateInPointVariable(instance)
+
+	module.exports.updateOutPointVariable(instance)
+
+	
 }
