@@ -721,6 +721,9 @@ class instance extends instance_skel {
 			case 'setInPoint':
 				this.setInPoint()
 				break
+			case 'setOutPoint':
+				this.setOutPoint()
+				break
 		}
 
 		if (cmd !== undefined) {
@@ -1228,7 +1231,24 @@ class instance extends instance_skel {
 	 async setInPoint() {
 		try {
 			
-			instance.setVariable('InPointHMSF', instance.timecodeVariables['TimecodeHMSF'])
+			this.setVariable('InPointHMSF', this.timecodeVariables['TimecodeHMSF'])
+			
+		} catch (e) {
+			if (e.code) {
+				this.log('error', e.code + ' ' + e.name)
+			}
+		}
+	}
+	
+	/**
+	 * INTERNAL: Set OutPoint
+	 *
+	 * @access protected
+	 */
+	async setOutPoint() {
+		try {
+			
+			this.setVariable('OutPointHMSF', this.timecodeVariables['TimecodeHMSF'])
 			
 		} catch (e) {
 			if (e.code) {
