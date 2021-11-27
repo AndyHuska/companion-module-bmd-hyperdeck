@@ -116,6 +116,51 @@ module.exports.updateTimecodeVariables = function (instance) {
 
 				instance.tcCache = tc
 
+				//now for the in-out stuff
+				try	{
+					const tcIn = Timecode(instance.tcInPoint, tb)
+					const tcOut = Timecode(instance.tcOutPoint, tb)
+					const tcInOutDuration = Math.max(0, tcOut.frameCount - tcIn.frameCount) //frameCount-1?
+					const tcRemainingToOut = Math.max(0, tcOut.frameCount - tc.frameCount)   //and here?
+					const fadeDurationInFrames = instance.fadeDuration * tb
+					if(tcRemainingToOut < fadeDurationInFrames)
+					{
+						if(instance.fadeArmed == 1)
+						{
+							instance.fadeTriggered = 1
+							instance.setVariable('FadeTriggered', instance.fadeTriggered)
+							instance.fadeArmed = 0
+							instance.setVariable('FadeArmed', instance.fadeArmed)
+							self.system.emit('bank_pressed', 1, 31, 1)
+						}
+						else if(instance.fadeTriggered == 1)
+						{
+							if(tcRemainingToOut == 0)
+							{
+								instance.fadeTriggered = 0
+								instance.setVariable('FadeTriggered', instance.fadeTriggered)
+							}
+						}
+					}
+
+					if(tcRemainingToOut == 0)
+					{
+						if(instance.stopArmed == 1)
+						{
+							instance.stopArmed = 0
+							instance.setVariable('StopArmed', instance.stopArmed)
+							//await instance.hyperdeck.sendCommand(new Commands.StopCommand())
+							instance.action({'action': 'stop'})
+						}
+					}
+
+					instance.inOutDuration = Timecode(tcInOutDuration, tb).toString()
+					instance.outTimeRemaining = Timecode(tcRemainingToOut, tb).toString()
+				}
+				catch(e) {
+
+				}
+
 				if (
 					instance.transportInfo['slotId'] !== undefined &&
 					instance.clipsList[instance.transportInfo['slotId']] !== undefined
@@ -135,21 +180,6 @@ module.exports.updateTimecodeVariables = function (instance) {
 						countDown.tcF = tcLeft.frames
 						countDown.tcHMS = tcLeft.toString().substr(0, 8)
 						countDown.tcHMSF = tcLeft.toString()
-
-
-						//now for the in-out stuff
-						try	{
-							const tcIn = Timecode(instance.tcInPoint, tb)
-							const tcOut = Timecode(instance.tcOutPoint, tb)
-							const tcInOutDuration = Math.max(0, tcOut.frameCount - tcIn.frameCount - 1) 
-							const tcRemainingToOut = Math.max(0, tcOut.frameCount - tc.frameCount - 1) 
-		
-							instance.inOutDuration = tcInOutDuration.toString()
-							instance.outTimeRemaining = tcRemainingToOut.toString()
-						}
-						catch(e) {
-
-						}
 					}
 				}
 			} catch (err) {
@@ -304,6 +334,26 @@ module.exports.initVariables = function (instance) {
 	variables.push({
 		label: 'OutTimeRemaining',
 		name: 'OutTimeRemaining',
+	})	
+
+	variables.push({
+		label: 'FadeDuration',
+		name: 'FadeDuration',
+	})	
+
+	variables.push({
+		label: 'FadeArmed',
+		name: 'FadeArmed',
+	})
+
+	variables.push({
+		label: 'FadeTriggered',
+		name: 'FadeTriggered',
+	})
+
+	variables.push({
+		label: 'StopArmed',
+		name: 'StopArmed',
 	})
 	
 
@@ -312,6 +362,12 @@ module.exports.initVariables = function (instance) {
 	module.exports.updateInPointVariable(instance)
 
 	module.exports.updateOutPointVariable(instance)
+
+
+	instance.setVariable("FadeDuration", instance.fadeDuration)
+	instance.setVariable("FadeArmed", instance.fadeArmed)
+	instance.setVariable("FadeTriggered", instance.fadeTriggered)
+	instance.setVariable("StopArmed", instance.stopArmed)
 
 
 	instance.setVariableDefinitions(variables)

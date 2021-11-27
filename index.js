@@ -46,6 +46,10 @@ class instance extends instance_skel {
 		this.tcOutPoint = '00:00:00:00'
 		this.inOutDuration = '00:00:00:00'
 		this.outTimeRemaining = '00:00:00:00'
+		this.fadeDuration = 3.0
+		this.fadeArmed = 0
+		this.fadeTriggered = 0
+		this.stopArmed = 0
 		this.transportInfo = {
 			status: '',
 			speed: '',
@@ -588,6 +592,26 @@ class instance extends instance_skel {
 			label: 'Go to Out Point',
 		}
 
+		actions['armFade'] = {
+			label: 'Arm Fade Point Trigger',
+			options: [
+				{
+					type: 'number',
+					label: 'Fade Duration',
+					id: 'fadeDurationInput',
+					default: 3.0,
+					min: 0.1,
+					max: 10.0,
+					required: true,
+					range: true,
+				},
+			],
+		}
+
+		actions['armStop'] = {
+			label: 'Arm Stop at Out Point',
+		}
+
 		this.setActions(actions)
 	}
 
@@ -747,9 +771,23 @@ class instance extends instance_skel {
 				cmd = new Commands.GoToCommand()
 				cmd.timecode = this.tcInPoint.toString()
 				break
-			case 'setOutPoint':
+			case 'goOutPoint':
 				cmd = new Commands.GoToCommand()
 				cmd.timecode = this.tcOutPoint.toString()
+				break
+			case 'armFade':				
+				this.fadeDuration = opt.fadeDurationInput
+				this.fadeTriggered = 0
+				this.fadeArmed = 1
+				this.stopArmed = 1
+				this.setVariable("FadeDuration", this.fadeDuration)
+				this.setVariable("FadeArmed", this.fadeArmed)
+				this.setVariable("FadeTriggered", this.fadeTriggered)
+				this.setVariable("StopArmed", this.stopArmed)
+				break
+			case 'armStop':				
+				this.stopArmed = 1
+				this.setVariable("StopArmed", this.stopArmed)
 				break
 		}
 
