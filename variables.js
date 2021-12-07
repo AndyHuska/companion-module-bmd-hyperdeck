@@ -123,7 +123,7 @@ module.exports.updateTimecodeVariables = function (instance) {
 					const tcInOutDuration = Math.max(0, tcOut.frameCount - tcIn.frameCount) //frameCount-1?
 					const tcRemainingToOut = Math.max(0, tcOut.frameCount - tc.frameCount)   //and here?
 					const fadeDurationInFrames = instance.fadeDuration * tb
-					if(tcRemainingToOut < fadeDurationInFrames)
+					if(tcRemainingToOut <= fadeDurationInFrames)
 					{
 						if(instance.fadeArmed == 1)
 						{
@@ -131,9 +131,14 @@ module.exports.updateTimecodeVariables = function (instance) {
 							instance.setVariable('FadeTriggered', instance.fadeTriggered)
 							instance.fadeArmed = 0
 							instance.setVariable('FadeArmed', instance.fadeArmed)
-							self.system.emit('bank_pressed', instance.stopPage, instance.stopBank, 1)
+							instance.system.emit('bank_pressed', instance.stopPage, instance.stopBank, true)
+							setTimeout(function () {
+								//debug('Auto releasing ', instance.stopPage, 'button', instance.stopBank)
+								system.emit('bank_pressed', instance.stopPage, instance.stopBank, false)
+							}, 20)
 						}
-						else if(instance.fadeTriggered == 1)
+						
+						if(instance.fadeTriggered == 1)
 						{
 							if(tcRemainingToOut == 0)
 							{
@@ -143,7 +148,7 @@ module.exports.updateTimecodeVariables = function (instance) {
 						}
 					}
 
-					if(tcRemainingToOut == 0)
+					/*if(tcRemainingToOut == 0)
 					{
 						if(instance.stopArmed == 1)
 						{
@@ -152,7 +157,7 @@ module.exports.updateTimecodeVariables = function (instance) {
 							//await instance.hyperdeck.sendCommand(new Commands.StopCommand())
 							instance.action({'action': 'stop'})
 						}
-					}
+					}*/
 
 					instance.inOutDuration = Timecode(tcInOutDuration, tb).toString()
 					instance.outTimeRemaining = Timecode(tcRemainingToOut, tb).toString()

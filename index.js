@@ -602,7 +602,7 @@ class instance extends instance_skel {
 					label: 'Press Button Before Out, seconds',
 					id: 'fadeDurationInput',
 					default: 0.0,
-					min: 0.1,
+					min: 0.0,
 					max: 10.0,
 					required: true,
 					range: true,
@@ -630,9 +630,14 @@ class instance extends instance_skel {
 			],
 		}
 
+		actions['cancelFade'] = {
+			label: 'Cancel Armed Button Press',
+		}
+
+		/*
 		actions['armStop'] = {
 			label: 'Arm Button Stop at Out Point',
-		}
+		}*/
 
 		this.setActions(actions)
 	}
@@ -801,19 +806,26 @@ class instance extends instance_skel {
 				this.fadeDuration = opt.fadeDurationInput
 				this.fadeTriggered = 0
 				this.fadeArmed = 1
-				this.stopArmed = 1
+				//this.stopArmed = 1
 				this.setVariable("FadeDuration", this.fadeDuration)
 				this.setVariable("FadeArmed", this.fadeArmed)
 				this.setVariable("FadeTriggered", this.fadeTriggered)
-				this.setVariable("StopArmed", this.stopArmed)
+				//this.setVariable("StopArmed", this.stopArmed)
 
 				this.stopPage = opt.stopPage
 				this.stopBank = opt.stopBank
 				break
-			case 'armStop':				
+			case 'cancelFade':				
+				this.fadeDuration = opt.fadeDurationInput
+				this.fadeTriggered = 0
+				this.fadeArmed = 0
+				this.setVariable("FadeArmed", this.fadeArmed)
+				this.setVariable("FadeTriggered", this.fadeTriggered)
+				break
+			/*case 'armStop':				
 				this.stopArmed = 1
 				this.setVariable("StopArmed", this.stopArmed)
-				break
+				break*/
 		}
 
 		if (cmd !== undefined) {
