@@ -125,6 +125,8 @@ module.exports.updateTimecodeVariables = function (instance) {
 					const fadeDurationInFrames = instance.fadeDuration * tb
 					if(tcRemainingToOut <= fadeDurationInFrames)
 					{
+						instance.fadeCanArm = 0
+
 						if(instance.fadeArmed == 1)
 						{
 							instance.fadeTriggered = 1
@@ -147,6 +149,12 @@ module.exports.updateTimecodeVariables = function (instance) {
 							}
 						}
 					}
+					else //if the current time code is less than the out point it is valid to arm the fade
+					{
+						instance.fadeCanArm = 1						
+					}
+
+					instance.setVariable('FadeCanArm', instance.fadeCanArm)
 
 					/*if(tcRemainingToOut == 0)
 					{
@@ -359,22 +367,22 @@ module.exports.initVariables = function (instance) {
 	variables.push({
 		label: 'StopArmed',
 		name: 'StopArmed',
-	})
-	
+	})	
+
+	variables.push({
+		label: 'FadeCanArm',
+		name: 'FadeCanArm',
+	})	
 
 	module.exports.updateTimecodeVariables(instance)
-
 	module.exports.updateInPointVariable(instance)
-
 	module.exports.updateOutPointVariable(instance)
-
 
 	instance.setVariable("FadeDuration", instance.fadeDuration)
 	instance.setVariable("FadeArmed", instance.fadeArmed)
 	instance.setVariable("FadeTriggered", instance.fadeTriggered)
 	instance.setVariable("StopArmed", instance.stopArmed)
+	instance.setVariable("FadeCanArm", instance.fadeCanArm)
 
-
-	instance.setVariableDefinitions(variables)
-	
+	instance.setVariableDefinitions(variables)	
 }

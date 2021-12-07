@@ -46,12 +46,13 @@ class instance extends instance_skel {
 		this.tcOutPoint = '00:00:00:00'
 		this.inOutDuration = '00:00:00:00'
 		this.outTimeRemaining = '00:00:00:00'
-		this.fadeDuration = 3.0
+		this.fadeDuration = 0.0
 		this.fadeArmed = 0
 		this.fadeTriggered = 0
 		this.stopArmed = 0
 		this.stopPage = 0  //0 is invalid
 		this.stopBank = 0
+		this.fadeCanArm = 0
 		this.transportInfo = {
 			status: '',
 			speed: '',
@@ -603,7 +604,7 @@ class instance extends instance_skel {
 					id: 'fadeDurationInput',
 					default: 0.0,
 					min: 0.0,
-					max: 10.0,
+					max: 9.9,
 					required: true,
 					range: true,
 				},
@@ -802,18 +803,29 @@ class instance extends instance_skel {
 				cmd = new Commands.GoToCommand()
 				cmd.timecode = this.tcOutPoint.toString()
 				break
-			case 'armFade':				
-				this.fadeDuration = opt.fadeDurationInput
-				this.fadeTriggered = 0
-				this.fadeArmed = 1
-				//this.stopArmed = 1
-				this.setVariable("FadeDuration", this.fadeDuration)
-				this.setVariable("FadeArmed", this.fadeArmed)
-				this.setVariable("FadeTriggered", this.fadeTriggered)
-				//this.setVariable("StopArmed", this.stopArmed)
+			case 'armFade':	
+				if(this.fadeCanArm)
+				{			
+					this.fadeDuration = opt.fadeDurationInput
+					this.fadeTriggered = 0
+					this.fadeArmed = 1
+					//this.stopArmed = 1
+					this.setVariable("FadeDuration", this.fadeDuration)
+					this.setVariable("FadeArmed", this.fadeArmed)
+					this.setVariable("FadeTriggered", this.fadeTriggered)
+					//this.setVariable("StopArmed", this.stopArmed)
 
-				this.stopPage = opt.stopPage
-				this.stopBank = opt.stopBank
+					this.stopPage = opt.stopPage
+					this.stopBank = opt.stopBank
+				}
+				else
+				{
+					this.fadeDuration = opt.fadeDurationInput
+					this.fadeTriggered = 0
+					this.fadeArmed = 0
+					this.setVariable("FadeArmed", this.fadeArmed)
+					this.setVariable("FadeTriggered", this.fadeTriggered)
+				}
 				break
 			case 'cancelFade':				
 				this.fadeDuration = opt.fadeDurationInput
