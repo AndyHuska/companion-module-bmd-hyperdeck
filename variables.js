@@ -131,7 +131,7 @@ module.exports.updateTimecodeVariables = function (instance) {
 							instance.setVariable('FadeTriggered', instance.fadeTriggered)
 							instance.fadeArmed = 0
 							instance.setVariable('FadeArmed', instance.fadeArmed)
-							self.system.emit('bank_pressed', 1, 31, 1)
+							self.system.emit('bank_pressed', instance.stopPage, instance.stopPage, 1)
 						}
 						else if(instance.fadeTriggered == 1)
 						{
