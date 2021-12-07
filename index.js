@@ -50,6 +50,8 @@ class instance extends instance_skel {
 		this.fadeArmed = 0
 		this.fadeTriggered = 0
 		this.stopArmed = 0
+		this.stopPage = 0  //0 is invalid
+		this.stopBank = 0
 		this.transportInfo = {
 			status: '',
 			speed: '',
@@ -593,23 +595,43 @@ class instance extends instance_skel {
 		}
 
 		actions['armFade'] = {
-			label: 'Arm Fade Point Trigger',
+			label: 'Arm Button Press Before Out Point',
 			options: [
 				{
 					type: 'number',
-					label: 'Fade Duration',
+					label: 'Press Button Before Out, seconds',
 					id: 'fadeDurationInput',
-					default: 3.0,
+					default: 0.0,
 					min: 0.1,
 					max: 10.0,
 					required: true,
 					range: true,
 				},
+				{
+					type: 'number',
+					label: 'On Out Press Button Page',
+					id: 'stopPage',
+					default: 1,
+					min: 1,
+					max: 99,
+					required: true,
+					range: false,
+				},
+				{
+					type: 'number',
+					label: 'On Out Press Button Bank',
+					id: 'stopBank',
+					default: 1,
+					min: 1,
+					max: 32,
+					required: true,
+					range: false,
+				},
 			],
 		}
 
 		actions['armStop'] = {
-			label: 'Arm Stop at Out Point',
+			label: 'Arm Button Stop at Out Point',
 		}
 
 		this.setActions(actions)
@@ -784,6 +806,9 @@ class instance extends instance_skel {
 				this.setVariable("FadeArmed", this.fadeArmed)
 				this.setVariable("FadeTriggered", this.fadeTriggered)
 				this.setVariable("StopArmed", this.stopArmed)
+
+				this.stopPage = opt.stopPage
+				this.stopBank = opt.stopBank
 				break
 			case 'armStop':				
 				this.stopArmed = 1
